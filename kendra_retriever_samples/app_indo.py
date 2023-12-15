@@ -10,12 +10,14 @@ import kendra_chat_falcon_40b as falcon40b
 import kendra_chat_llama_2 as llama2
 import kendra_chat_bedrock_titan as bedrock_titan
 import kendra_chat_bedrock_claude as bedrock_claude
+import kendra_chat_bedrock_claude_indo as bedrock_claude_indo
 import kendra_chat_bedrock_claudev2 as bedrock_claudev2
 
 
 
 USER_ICON = "images/user-icon.png"
 AI_ICON = "images/ai-icon.png"
+PELINDO_ICON = "images/Logo_Baru_Pelindo_(2021).png"
 MAX_HISTORY_LENGTH = 5
 PROVIDER_MAP = {
     'openai': 'Open AI',
@@ -24,7 +26,8 @@ PROVIDER_MAP = {
     'flanxxl': 'Flan XXL',
     'falcon40b': 'Falcon 40B',
     'llama2' : 'Llama 2',
-    'bedrock_claude' : 'Bedrock'
+    'bedrock_claude' : 'Bedrock',
+    'bedrock_claude_indo' : 'Bedrock'
 }
 
 #function to read a properties file and create environment variables
@@ -74,13 +77,16 @@ if 'llm_chain' not in st.session_state:
         elif (sys.argv[1] == 'bedrock_claude'):
             st.session_state['llm_app'] = bedrock_claude
             st.session_state['llm_chain'] = bedrock_claude.build_chain()
+        elif (sys.argv[1] == 'bedrock_claude_indo'):
+            st.session_state['llm_app'] = bedrock_claude_indo
+            st.session_state['llm_chain'] = bedrock_claude_indo.build_chain()    
         elif (sys.argv[1] == 'bedrock_claudev2'):
             st.session_state['llm_app'] = bedrock_claudev2
             st.session_state['llm_chain'] = bedrock_claudev2.build_chain()
         else:
             raise Exception("Unsupported LLM: ", sys.argv[1])
     else:
-        raise Exception("Usage: streamlit run app.py <anthropic|flanxl|flanxxl|openai|bedrock_titan|bedrock_claude|bedrock|claudev2>")
+        raise Exception("Usage: streamlit run app.py <anthropic|flanxl|flanxxl|openai|bedrock_titan|bedrock_claude|bedrock|claudev2|bedrock_claude_indo>")
 
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
@@ -125,23 +131,23 @@ st.markdown("""
 def write_logo():
     col1, col2, col3 = st.columns([5, 1, 5])
     with col2:
-        st.image(AI_ICON, use_column_width='always') 
+        st.image(PELINDO_ICON, use_column_width='always') 
 
 
 def write_top_bar():
-    col1, col2, col3 = st.columns([1,10,2])
+    col1, col2, col3 = st.columns([5,10,2])
     with col1:
-        st.image(AI_ICON, use_column_width='always')
+        st.image(PELINDO_ICON, use_column_width='always')
     with col2:
         selected_provider = sys.argv[1]
         if selected_provider in PROVIDER_MAP:
             provider = PROVIDER_MAP[selected_provider]
         else:
             provider = selected_provider.capitalize()
-        header = f"Deeeplabs Apps powered by Amazon Kendra and {provider}!"
+        header = f"VMS Customer Care Apps powered by Amazon Kendra and {provider}!"
         st.write(f"<h3 class='main-header'>{header}</h3>", unsafe_allow_html=True)
     with col3:
-        clear = st.button("Clear Chat")
+        clear = st.button("Bersihkan Chat")
     return clear
 
 clear = write_top_bar()
@@ -205,7 +211,7 @@ def render_result(result):
 def render_answer(answer):
     col1, col2 = st.columns([1,12])
     with col1:
-        st.image(AI_ICON, use_column_width='always')
+        st.image(PELINDO_ICON, use_column_width='always')
     with col2:
         st.info(answer['answer'])
 
@@ -231,4 +237,4 @@ with st.container():
     write_chat_message(a, q)
 
 st.markdown('---')
-input = st.text_input("You are talking to an AI, ask any question.", key="input", on_change=handle_input)
+input = st.text_input("Silahkan tanyakan terkait VMS.", key="input", on_change=handle_input)
